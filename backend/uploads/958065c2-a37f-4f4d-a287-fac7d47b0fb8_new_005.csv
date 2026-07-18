@@ -1,0 +1,11 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/06/16,CUST-1001,Wireless Charger Pad,1,78.66,US
+ORD-000002,2026/06/17,CUST-1002,Standing Desk Converter,3,38.46,US
+ORD-000003,2026/06/18,CUST-1003,Running Shoes Elite,3,36.22,US
+ORD-000004,2026/06/19,CUST-1004,Smart Watch Series 5,2,29.66,US
+ORD-000005,2026/06/20,CUST-1005,Monitor Arm Dual,3,88.01,US
+ORD-000006,2026/06/21,CUST-1006,LED Desk Lamp,3,23.32,US
+ORD-000007,2026/06/22,CUST-1007,Portable Power Bank,3,42.8,US
+ORD-000008,2026/06/23,CUST-1008,Monitor Arm Dual,3,52.24,US
+ORD-000009,2026/06/24,CUST-1009,Leather Wallet Classic,1,38.0,US
+ORD-000010,2026/06/25,CUST-1010,Noise Cancelling Earbuds,2,45.03,US

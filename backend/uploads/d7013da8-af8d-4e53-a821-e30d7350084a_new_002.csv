@@ -1,0 +1,6 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/06/16,CUST-1001,Wireless Headphones Pro,1,93.88,US
+ORD-000002,2026/06/17,CUST-1002,Portable Power Bank,1,33.44,US
+ORD-000003,2026/06/18,CUST-1003,LED Desk Lamp,1,58.56,US
+ORD-000004,2026/06/19,CUST-1004,Yoga Mat Premium,1,86.0,US
+ORD-000005,2026/06/20,CUST-1005,Air Purifier Small,1,41.29,US

@@ -1,0 +1,6 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/06/16,CUST-1001,Noise Cancelling Earbuds,1,86.15,US
+ORD-000002,2026/06/17,CUST-1002,Yoga Mat Premium,2,62.12,US
+ORD-000003,2026/06/18,CUST-1003,Ergonomic Office Chair,1,92.85,US
+ORD-000004,2026/06/19,CUST-1004,Stainless Steel Water Bottle,3,84.88,US
+ORD-000005,2026/06/20,CUST-1005,Stainless Steel Water Bottle,3,58.79,US

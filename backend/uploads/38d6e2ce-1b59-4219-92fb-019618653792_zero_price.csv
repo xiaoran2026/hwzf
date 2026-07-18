@@ -1,0 +1,4 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-001,2026/01/15,CUST-1001,Free Item A,2,0.00,US
+ORD-002,2026/01/16,CUST-1002,Free Item B,1,0.00,CA
+ORD-003,2026/01/17,CUST-1003,Free Item C,3,0.00,UK

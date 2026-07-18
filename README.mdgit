@@ -1,0 +1,1 @@
+"# hwzf"  add README.mdgit commit -m "first commit"git branch -M main# 绑定远程GitHub仓库git remote add origin https://github.com/xiaoran2026/hwzf.git# 推送代码到远程main分支git push -u origin main

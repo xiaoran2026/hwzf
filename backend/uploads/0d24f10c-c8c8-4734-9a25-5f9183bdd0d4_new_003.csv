@@ -1,0 +1,10 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/06/16,CUST-1001,Leather Wallet Classic,2,47.57,US
+ORD-000002,2026/06/17,CUST-1002,External SSD 1TB,2,82.76,US
+ORD-000003,2026/06/18,CUST-1003,Bluetooth Speaker Mini,2,37.35,US
+ORD-000004,2026/06/19,CUST-1004,Mechanical Keyboard RGB,1,37.46,US
+ORD-000005,2026/06/20,CUST-1005,Portable Power Bank,1,96.01,US
+ORD-000006,2026/06/21,CUST-1006,Yoga Mat Premium,2,81.97,US
+ORD-000007,2026/06/22,CUST-1007,Smart Watch Series 5,3,82.0,US
+ORD-000008,2026/06/23,CUST-1008,Leather Wallet Classic,3,70.19,US
+ORD-000009,2026/06/24,CUST-1009,Noise Cancelling Earbuds,1,79.16,US

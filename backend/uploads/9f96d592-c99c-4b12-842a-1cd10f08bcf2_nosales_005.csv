@@ -1,0 +1,4 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/01/02,CUST-1001,Wireless Mouse Silent,0,38.15,US
+ORD-000002,2026/01/03,CUST-1002,4K Webcam Pro,0,34.83,US
+ORD-000003,2026/01/04,CUST-1003,Portable Power Bank,0,39.2,US

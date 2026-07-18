@@ -1,0 +1,7 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/01/02,CUST-1001,Wireless Charger Pad,0,21.75,US
+ORD-000002,2026/01/03,CUST-1002,Wireless Charger Pad,0,37.04,US
+ORD-000003,2026/01/04,CUST-1003,Stainless Steel Water Bottle,0,46.86,US
+ORD-000004,2026/01/05,CUST-1004,External SSD 1TB,0,40.75,US
+ORD-000005,2026/01/06,CUST-1005,Running Shoes Elite,0,14.96,US
+ORD-000006,2026/01/07,CUST-1006,Portable Power Bank,0,10.48,US

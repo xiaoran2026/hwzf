@@ -1,0 +1,8 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/01/02,CUST-1001,Wireless Charger Pad,0,22.92,US
+ORD-000002,2026/01/03,CUST-1002,LED Desk Lamp,0,12.97,US
+ORD-000003,2026/01/04,CUST-1003,Mechanical Keyboard RGB,0,36.6,US
+ORD-000004,2026/01/05,CUST-1004,Noise Cancelling Earbuds,0,42.78,US
+ORD-000005,2026/01/06,CUST-1005,Leather Wallet Classic,0,47.16,US
+ORD-000006,2026/01/07,CUST-1006,External SSD 1TB,0,30.87,US
+ORD-000007,2026/01/08,CUST-1007,Noise Cancelling Earbuds,0,45.43,US

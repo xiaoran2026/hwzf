@@ -1,0 +1,8 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/01/02,CUST-1001,Organic Cotton T-Shirt,0,23.59,US
+ORD-000002,2026/01/03,CUST-1002,Smart Watch Series 5,0,48.06,US
+ORD-000003,2026/01/04,CUST-1003,External SSD 1TB,0,27.8,US
+ORD-000004,2026/01/05,CUST-1004,Leather Wallet Classic,0,42.2,US
+ORD-000005,2026/01/06,CUST-1005,Bluetooth Speaker Mini,0,45.7,US
+ORD-000006,2026/01/07,CUST-1006,Smart Watch Series 5,0,35.3,US
+ORD-000007,2026/01/08,CUST-1007,Smart Watch Series 5,0,13.85,US

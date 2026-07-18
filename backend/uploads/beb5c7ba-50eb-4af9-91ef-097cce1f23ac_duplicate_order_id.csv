@@ -1,0 +1,5 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-001,2026/01/15,CUST-1001,Product A,1,29.99,US
+ORD-001,2026/01/15,CUST-1001,Product B,1,49.99,US
+ORD-001,2026/01/15,CUST-1001,Product C,2,19.99,US
+ORD-002,2026/01/16,CUST-1002,Product D,1,39.99,CA

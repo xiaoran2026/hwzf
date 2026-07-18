@@ -1,0 +1,8 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/06/16,CUST-1001,Wireless Charger Pad,3,82.69,US
+ORD-000002,2026/06/17,CUST-1002,Standing Desk Converter,1,83.86,US
+ORD-000003,2026/06/18,CUST-1003,Yoga Mat Premium,3,28.38,US
+ORD-000004,2026/06/19,CUST-1004,Air Purifier Small,3,36.74,US
+ORD-000005,2026/06/20,CUST-1005,Leather Wallet Classic,1,73.31,US
+ORD-000006,2026/06/21,CUST-1006,Smart Watch Series 5,3,54.32,US
+ORD-000007,2026/06/22,CUST-1007,Noise Cancelling Earbuds,3,42.95,US

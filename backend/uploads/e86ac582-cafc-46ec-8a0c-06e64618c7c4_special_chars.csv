@@ -1,0 +1,11 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-001,2026/01/15,CUST-1001,"Product <script>alert('xss')</script>",1,29.99,US
+ORD-002,2026/01/16,CUST-1002,"Product '; DROP TABLE users; --",1,49.99,CA
+ORD-003,2026/01/17,CUST-1003,"Product 👍 Emoji Test 🎉",2,19.99,UK
+ORD-004,2026/01/18,CUST-1004,无线耳机蓝牙耳机,1,199.99,CN
+ORD-005,2026/01/19,CUST-1005,ワイヤレスイヤホン高音質,1,149.99,JP
+ORD-006,2026/01/20,CUST-1006,무선 이어폰 블루투스,1,129.99,KR
+ORD-007,2026/01/21,CUST-1007,"Product <b>Bold HTML</b>",1,39.99,US
+ORD-008,2026/01/22,CUST-1008,"Product #markdown *italic* **bold**",1,59.99,CA
+ORD-009,2026/01/23,CUST-1009,"Product | pipe | symbol | test",2,24.99,US
+ORD-010,2026/01/24,CUST-1010,"Product \n newline \t tab test",1,34.99,UK

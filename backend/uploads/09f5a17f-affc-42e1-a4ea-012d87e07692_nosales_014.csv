@@ -1,0 +1,4 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/01/02,CUST-1001,Running Shoes Elite,0,47.53,US
+ORD-000002,2026/01/03,CUST-1002,Standing Desk Converter,0,46.15,US
+ORD-000003,2026/01/04,CUST-1003,LED Desk Lamp,0,39.31,US

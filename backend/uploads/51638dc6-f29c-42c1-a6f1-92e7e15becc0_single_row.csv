@@ -1,0 +1,2 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-001,2026/01/15,CUST-1001,Test Product,1,29.99,US

@@ -1,0 +1,13 @@
+order_id,date,customer_id,product_name,quantity,price,country
+ORD-000001,2026/06/16,CUST-1001,Air Purifier Small,3,75.31,US
+ORD-000002,2026/06/17,CUST-1002,4K Webcam Pro,3,26.43,US
+ORD-000003,2026/06/18,CUST-1003,Organic Cotton T-Shirt,3,68.7,US
+ORD-000004,2026/06/19,CUST-1004,Leather Wallet Classic,1,58.57,US
+ORD-000005,2026/06/20,CUST-1005,Smart Watch Series 5,2,29.18,US
+ORD-000006,2026/06/21,CUST-1006,Bluetooth Speaker Mini,2,74.66,US
+ORD-000007,2026/06/22,CUST-1007,Wireless Mouse Silent,1,74.47,US
+ORD-000008,2026/06/23,CUST-1008,Stainless Steel Water Bottle,2,24.65,US
+ORD-000009,2026/06/24,CUST-1009,External SSD 1TB,3,41.34,US
+ORD-000010,2026/06/25,CUST-1010,Stainless Steel Water Bottle,1,59.36,US
+ORD-000011,2026/06/26,CUST-1011,Stainless Steel Water Bottle,3,49.66,US
+ORD-000012,2026/06/27,CUST-1012,Monitor Arm Dual,3,83.79,US
