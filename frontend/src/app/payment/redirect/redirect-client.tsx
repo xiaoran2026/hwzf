@@ -84,7 +84,7 @@ export default function RedirectClient() {
             View demo report
           </Link>
           <Link
-            href="mailto:wen.dyens0038@gmail.com"
+            href="mailto:support@store-leak.com"
             className="text-sm font-semibold text-gray-900 underline underline-offset-4 decoration-black/20 hover:decoration-black/40"
           >
             Contact support

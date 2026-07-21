@@ -60,7 +60,7 @@ const faqItems = [
   },
 ];
 
-const SUPPORT_EMAIL = "wen.dyens0038@gmail.com";
+const SUPPORT_EMAIL = "support@store-leak.com";
 
 const fmtCurrency = (v: number, cur = "USD") =>
   new Intl.NumberFormat("en-US", {

@@ -173,7 +173,7 @@ export default function ProfilePage() {
             <Link href="/terms" className="hover:text-gray-900">
               Terms
             </Link>
-            <a href="mailto:wen.dyens0038@gmail.com" className="hover:text-gray-900">
+            <a href="mailto:support@store-leak.com" className="hover:text-gray-900">
               Support
             </a>
           </div>
