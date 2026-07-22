@@ -107,9 +107,13 @@ class AnalysisEngineServiceTest {
         assertEquals(2, ranking.get(0).getOrderCount());
         assertEquals(2, ranking.get(0).getQuantity());
 
-        // Wireless Earbuds #2: 2*29.99 = 59.98
-        assertEquals("Wireless Earbuds", ranking.get(1).getProductName());
-        assertEquals(new BigDecimal("59.98"), ranking.get(1).getRevenue());
+        // Laptop Stand #2: 2*49.99 = 99.98 (revenue-desc ranking)
+        assertEquals("Laptop Stand", ranking.get(1).getProductName());
+        assertEquals(new BigDecimal("99.98"), ranking.get(1).getRevenue());
+
+        // Wireless Earbuds #3: 2*29.99 = 59.98
+        assertEquals("Wireless Earbuds", ranking.get(2).getProductName());
+        assertEquals(new BigDecimal("59.98"), ranking.get(2).getRevenue());
     }
 
     @Test
@@ -141,9 +145,13 @@ class AnalysisEngineServiceTest {
         assertEquals(new BigDecimal("249.97"), stats.get(0).getRevenue());
         assertEquals(2, stats.get(0).getOrderCount());
 
-        // US #2: 59.98 + 29.97 = 89.95
-        assertEquals("US", stats.get(1).getCountry());
-        assertEquals(new BigDecimal("89.95"), stats.get(1).getRevenue());
+        // GB #2: 149.99 (single order beats US total)
+        assertEquals("GB", stats.get(1).getCountry());
+        assertEquals(new BigDecimal("149.99"), stats.get(1).getRevenue());
+
+        // US #3: 59.98 + 29.97 = 89.95
+        assertEquals("US", stats.get(2).getCountry());
+        assertEquals(new BigDecimal("89.95"), stats.get(2).getRevenue());
 
         // GB #3: 149.99
         assertEquals("GB", stats.get(2).getCountry());
