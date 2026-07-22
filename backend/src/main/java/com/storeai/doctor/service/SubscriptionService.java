@@ -72,7 +72,8 @@ public class SubscriptionService {
         PlanEnum plan = getUserPlan(userId);
         if (plan.isUnlimitedUploads()) return true;
 
-        if (plan.isFree()) {
+        // FREE and PRO are one-time plans: count lifetime uploads, not monthly.
+        if (plan.isFree() || plan == PlanEnum.PRO) {
             long totalUploads = uploadedFileRepository.countByUserId(userId);
             return totalUploads < plan.getMaxUploadsPerMonth();
         }
@@ -100,13 +101,13 @@ public class SubscriptionService {
         PlanEnum plan = getUserPlan(userId);
         if (plan.isUnlimitedReports()) return true;
 
-        // For FREE plan: 1 report lifetime
-        if (plan.isFree()) {
+        // FREE and PRO are one-time plans: count lifetime reports, not monthly.
+        if (plan.isFree() || plan == PlanEnum.PRO) {
             long reportCount = analysisReportRepository.countByTaskUploadedFileStoreUserId(userId);
             return reportCount < plan.getMaxReports();
         }
 
-        // For paid plans: check monthly
+        // For subscription plans: check monthly
         YearMonth currentMonth = YearMonth.now();
         LocalDateTime startOfMonth = currentMonth.atDay(1).atStartOfDay();
         LocalDateTime endOfMonth = currentMonth.atEndOfMonth().atTime(23, 59, 59);
@@ -130,7 +131,7 @@ public class SubscriptionService {
         if (plan.isUnlimitedReports()) return -1;
 
         long used;
-        if (plan.isFree()) {
+        if (plan.isFree() || plan == PlanEnum.PRO) {
             used = analysisReportRepository.countByTaskUploadedFileStoreUserId(userId);
         } else {
             YearMonth currentMonth = YearMonth.now();
@@ -168,7 +169,7 @@ public class SubscriptionService {
         if (plan.isUnlimitedUploads()) return -1;
 
         long used;
-        if (plan.isFree()) {
+        if (plan.isFree() || plan == PlanEnum.PRO) {
             used = uploadedFileRepository.countByUserId(userId);
         } else {
             YearMonth currentMonth = YearMonth.now();
@@ -383,7 +384,7 @@ public class SubscriptionService {
 
         // Upload usage
         long uploadCount;
-        if (plan.isFree()) {
+        if (plan.isFree() || plan == PlanEnum.PRO) {
             uploadCount = uploadedFileRepository.countByUserId(userId);
         } else {
             YearMonth currentMonth = YearMonth.now();
@@ -399,7 +400,7 @@ public class SubscriptionService {
 
         // Report usage
         long reportCount;
-        if (plan.isFree()) {
+        if (plan.isFree() || plan == PlanEnum.PRO) {
             reportCount = analysisReportRepository.countByTaskUploadedFileStoreUserId(userId);
         } else {
             YearMonth currentMonth = YearMonth.now();

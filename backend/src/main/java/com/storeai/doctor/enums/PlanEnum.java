@@ -9,7 +9,7 @@ import java.util.*;
  * - STARTER: growing stores
  * - GROWTH: scaling businesses with AI-powered growth
  * - AGENCY: agencies managing multiple client stores
- * - PRO: legacy plan, maps to GROWTH
+ * - PRO: one-time $19 purchase, single store/upload/report (lifetime)
  */
 public enum PlanEnum {
     FREE(1, 1, 1, 50000, 0.0, Set.of("AI_INSIGHTS")),
@@ -27,7 +27,7 @@ public enum PlanEnum {
             "DEEP_AI_ANALYSIS", "ANOMALY_DETECTION",
             "SCHEDULED_REPORTS", "EMAIL_ALERTS", "API_ACCESS", "TEAM_COLLABORATION",
             "CLIENT_REPORTING", "AI_ASSISTANT", "AI_CAMPAIGNS")),
-    PRO(-1, -1, -1, 50000, 19.0, Set.of(
+    PRO(1, 1, 1, 50000, 19.0, Set.of(
             "AI_INSIGHTS", "AI_FORECAST", "GROWTH_OPPORTUNITIES",
             "HISTORICAL_TRENDS", "PDF_EXPORT",
             "CUSTOMER_RETENTION", "COHORT_ANALYSIS", "CROSS_STORE_ANALYSIS",

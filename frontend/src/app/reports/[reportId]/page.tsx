@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { reportsApi } from "@/lib/api";
 import type { ReportData } from "@/lib/types";
+import { useAuth } from "@/contexts/AuthContext";
+import { planMeetsRequirement, type PlanId } from "@/lib/planConfig";
 import Loading from "@/components/ui/Loading";
 import ReportPdfExport from "@/components/ReportPdfExport";
 import UnlockButton from "@/components/payment/UnlockButton";
@@ -34,12 +36,34 @@ function normalizeSentence(text: string) {
   return trimmed.endsWith(".") ? trimmed.slice(0, -1) : trimmed;
 }
 
+function LockIcon() {
+  return (
+    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+    </svg>
+  );
+}
+
+function LockedCard({ label }: { label: string }) {
+  return (
+    <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/80 flex flex-col items-center justify-center text-center min-h-[100px]">
+      <LockIcon />
+      <p className="mt-2 text-xs font-medium text-gray-500">{label}</p>
+      <p className="mt-1 text-[11px] text-gray-400">Unlock with Full Recovery Plan</p>
+    </div>
+  );
+}
+
 export default function ReportDetailPage() {
   const params = useParams();
   const reportId = params.reportId as string;
   const [data, setData] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
+
+  const userPlan = ((user?.plan || "FREE").toUpperCase()) as PlanId;
+  const isPaid = planMeetsRequirement(userPlan, "STARTER");
 
   const id = Number(reportId);
   const valid = !isNaN(id) && id > 0;
@@ -257,7 +281,7 @@ export default function ReportDetailPage() {
           <span>/</span>
           <span className="text-gray-900 font-medium">Revenue Leak Report #{reportId}</span>
         </div>
-        <ReportPdfExport data={data} reportId={reportId} />
+        <ReportPdfExport data={data} reportId={reportId} isPaid={isPaid} />
       </div>
 
       <section className={`${CARD} p-6 md:p-8 mb-8`}>
@@ -291,6 +315,7 @@ export default function ReportDetailPage() {
         </div>
       </section>
 
+      {isPaid && (
       <section className={`${CARD} p-6 mb-8`}>
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
@@ -341,6 +366,7 @@ export default function ReportDetailPage() {
           ))}
         </div>
       </section>
+      )}
 
       <section className={`${CARD} p-6 mb-8`}>
         <div className="flex items-start justify-between gap-4 mb-4">
@@ -352,7 +378,7 @@ export default function ReportDetailPage() {
           </div>
         </div>
         <div className="grid lg:grid-cols-3 gap-4">
-          {benchmarkVisuals.map((item) => (
+          {benchmarkVisuals.slice(0, isPaid ? undefined : 1).map((item) => (
             <div key={item.title} className="rounded-2xl border border-gray-100 bg-gray-50/50 p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -373,13 +399,19 @@ export default function ReportDetailPage() {
               <p className="mt-3 text-sm text-gray-600 leading-relaxed">{item.note}</p>
             </div>
           ))}
+          {!isPaid && benchmarkVisuals.length > 1 && (
+            <>
+              <LockedCard label={`+${benchmarkVisuals.length - 1} more benchmarks`} />
+              {benchmarkVisuals.length > 2 && <div className="hidden lg:block" />}
+            </>
+          )}
         </div>
       </section>
 
       <section className={`${CARD} p-6 mb-8`}>
         <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Top Revenue Opportunities</h2>
         <div className="space-y-4">
-          {topLeaks.map((leak) => (
+          {topLeaks.slice(0, isPaid ? undefined : 1).map((leak) => (
             <div key={leak.title} className="p-5 rounded-2xl border border-gray-100 bg-gray-50/50">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
@@ -417,13 +449,19 @@ export default function ReportDetailPage() {
               </div>
             </div>
           ))}
+          {!isPaid && topLeaks.length > 1 && (
+            <div className="grid sm:grid-cols-2 gap-3">
+              <LockedCard label={`+${topLeaks.length - 1} more opportunities`} />
+              <LockedCard label="Full priority list with impact details" />
+            </div>
+          )}
         </div>
       </section>
 
       <section className={`${CARD} p-6 mb-8`}>
         <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Fastest Recovery Actions</h2>
         <div className="grid md:grid-cols-3 gap-3">
-          {quickWins.map((item) => (
+          {quickWins.slice(0, isPaid ? undefined : 1).map((item) => (
             <div key={item.title} className="p-4 rounded-2xl border border-gray-100 bg-gray-50/50">
               <p className="text-sm font-semibold text-gray-900 leading-relaxed">{item.title}</p>
               <p className="mt-3 text-xs text-gray-500">Potential Impact</p>
@@ -435,11 +473,18 @@ export default function ReportDetailPage() {
               <p className="mt-3 text-xs text-gray-500">Use this this week to test recovery potential.</p>
             </div>
           ))}
+          {!isPaid && quickWins.length > 1 && (
+            <>
+              <LockedCard label={`+${quickWins.length - 1} more quick wins`} />
+              {quickWins.length > 2 && <LockedCard label="Full recovery action plan" />}
+            </>
+          )}
         </div>
       </section>
 
       <section className={`${CARD} p-6 mb-8`}>
         <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Your Revenue Recovery Plan</h2>
+        {isPaid ? (
         <div className="grid md:grid-cols-3 gap-4 text-sm">
           <div>
             <p className="font-semibold text-gray-900">This Week</p>
@@ -470,6 +515,15 @@ export default function ReportDetailPage() {
             </ul>
           </div>
         </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="p-4 rounded-2xl border border-gray-100 bg-gray-50/50">
+              <p className="text-sm font-semibold text-gray-900">This Week</p>
+              <p className="mt-2 text-sm text-gray-600">{normalizeSentence(data.recommendations[0] || "Start your first recovery action")}</p>
+            </div>
+            <LockedCard label="Full recovery plan with weekly actions" />
+          </div>
+        )}
       </section>
 
       <section className={`${CARD} p-6 mb-8`}>
@@ -482,7 +536,7 @@ export default function ReportDetailPage() {
           </div>
         </div>
         <div className="grid md:grid-cols-3 gap-4">
-          {emailRecoveryKit.map((item) => (
+          {emailRecoveryKit.slice(0, isPaid ? undefined : 1).map((item) => (
             <div key={item.title} className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4">
               <p className="text-sm font-semibold text-gray-900">{item.title}</p>
               <p className="mt-3 text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Subject</p>
@@ -496,6 +550,12 @@ export default function ReportDetailPage() {
               </div>
             </div>
           ))}
+          {!isPaid && emailRecoveryKit.length > 1 && (
+            <>
+              <LockedCard label={`+${emailRecoveryKit.length - 1} more email templates`} />
+              {emailRecoveryKit.length > 2 && <LockedCard label="Complete email recovery kit" />}
+            </>
+          )}
         </div>
       </section>
 
@@ -511,6 +571,7 @@ export default function ReportDetailPage() {
         </div>
       </section>
 
+      {!isPaid && (
       <section className="bg-orange-50 rounded-2xl border border-orange-100 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-lg font-bold text-gray-950">Unlock Your Full Recovery Plan</h2>
@@ -528,6 +589,7 @@ export default function ReportDetailPage() {
           </Link>
         </div>
       </section>
+      )}
     </div>
   );
 }
