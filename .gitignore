@@ -1,0 +1,18 @@
+# Build outputs
+frontend/.next/
+backend/target/
+frontend/tsconfig.tsbuildinfo
+frontend/node_modules.zip
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Runtime uploads (local dev)
+backend/uploads/
+
+# OS
+.DS_Store
+Thumbs.db
