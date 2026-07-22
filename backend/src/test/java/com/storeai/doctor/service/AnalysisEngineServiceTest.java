@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storeai.doctor.dto.AnalysisResultDTO;
 import com.storeai.doctor.entity.AnalysisTask;
 import com.storeai.doctor.entity.OrderRecord;
+import com.storeai.doctor.repository.OrderRecordRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,16 +15,20 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class AnalysisEngineServiceTest {
 
     private AnalysisEngineService service;
+    private OrderRecordRepository orderRecordRepository;
     private AnalysisTask mockTask;
     private List<OrderRecord> testRecords;
 
     @BeforeEach
     void setUp() {
-        service = new AnalysisEngineService(null, null, null, new ObjectMapper());
+        orderRecordRepository = mock(OrderRecordRepository.class);
+        service = new AnalysisEngineService(orderRecordRepository, null, null, new ObjectMapper());
         mockTask = new AnalysisTask();
         mockTask.setId(1L);
 
@@ -48,6 +53,8 @@ class AnalysisEngineServiceTest {
         // Order 5: Customer B (repeat!) buys 2 Laptop Stand @ $49.99 in CA on 2024-03-05
         testRecords.add(createRecord(mockTask, "ORD005", LocalDate.of(2024, 3, 5),
                 "CUST_B", "Laptop Stand", 2, new BigDecimal("49.99"), "CA"));
+
+        when(orderRecordRepository.findByTaskId(1L)).thenReturn(testRecords);
     }
 
     @Test

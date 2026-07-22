@@ -35,6 +35,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -158,8 +159,9 @@ class UploadAndAnalyzeIntegrationTest {
 
     @Test
     void testAiReportGenerationWithMockDeepSeek() throws Exception {
-        // Mock DeepSeek API response
-        when(deepSeekService.callChatApi(anyString(), anyString()))
+        // Mock DeepSeek API response (lenient: this test verifies DTO parsing of the
+        // mocked payload and does not drive the live call path, so the stub may go unused)
+        lenient().when(deepSeekService.callChatApi(anyString(), anyString()))
                 .thenReturn(MOCK_AI_RESPONSE.trim());
 
         // Simulate: analysis_data already exists as JSON

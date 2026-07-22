@@ -81,7 +81,7 @@ class AiReportServiceTest {
     void testPromptTemplateBuildsSystemPrompt() {
         String systemPrompt = promptTemplate.buildSystemPrompt();
         assertNotNull(systemPrompt);
-        assertTrue(systemPrompt.contains("Shopify growth consultant"));
+        assertTrue(systemPrompt.contains("senior e-commerce data analyst"));
         assertTrue(systemPrompt.contains("healthScore"));
         assertTrue(systemPrompt.contains("salesInsights"));
         assertTrue(systemPrompt.contains("Do NOT recalculate"));
