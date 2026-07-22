@@ -154,6 +154,8 @@ public class FileUploadController {
         AnalysisTask savedTask = analysisTaskRepository.save(task);
 
         // 6. Parse CSV
+        // Privacy: the raw CSV is deleted from disk immediately after parsing,
+        // regardless of outcome. Order-level data lives in the database only.
         List<OrderDataDTO> orders;
         try (FileInputStream fis = new FileInputStream(targetPath.toFile())) {
             orders = csvParseService.parseCsv(fis);
@@ -165,6 +167,8 @@ public class FileUploadController {
             uploadedFileRepository.save(savedFile);
             log.error("CSV parse failed for file: {}", originalFilename, e);
             return ApiResponse.error("CSV parse failed: " + e.getMessage());
+        } finally {
+            deleteRawFileQuietly(targetPath);
         }
 
         // Check empty file
@@ -279,6 +283,21 @@ public class FileUploadController {
                 savedTask.getId()
         );
         return ApiResponse.success(response);
+    }
+
+    /**
+     * Best-effort deletion of the raw uploaded CSV from disk.
+     * The file is never needed after parsing — order data is stored in the database.
+     */
+    private void deleteRawFileQuietly(Path path) {
+        try {
+            boolean deleted = Files.deleteIfExists(path);
+            if (deleted) {
+                log.info("[Upload] Raw CSV deleted after parsing: {}", path.getFileName());
+            }
+        } catch (Exception e) {
+            log.warn("[Upload] Failed to delete raw CSV {}: {}", path.getFileName(), e.getMessage());
+        }
     }
 
     /**

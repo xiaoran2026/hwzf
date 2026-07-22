@@ -85,13 +85,18 @@ export default function ReportDetailPage() {
     return Math.max(0, data.salesAnalysis.totalRevenue / 6);
   }, [data]);
 
-  const estimatedLostRevenue = useMemo(() => {
-    if (!data) return 0;
+  const opportunityModel = useMemo(() => {
+    if (!data) return { factor: 0, repeatPenalty: 0, scorePenalty: 0 };
     const repeatPenalty = data.customerAnalysis && data.customerAnalysis.repeatRate < 35 ? 0.08 : 0.03;
     const scorePenalty = ((100 - data.healthScore) / 100) * 0.55;
     const factor = Math.min(0.35, Math.max(0.05, scorePenalty + repeatPenalty));
-    return Math.round(monthlyRevenue * factor);
-  }, [data, monthlyRevenue]);
+    return { factor, repeatPenalty, scorePenalty };
+  }, [data]);
+
+  const estimatedLostRevenue = useMemo(() => {
+    if (!data) return 0;
+    return Math.round(monthlyRevenue * opportunityModel.factor);
+  }, [data, monthlyRevenue, opportunityModel]);
 
   const topLeaks = useMemo(() => {
     if (!data) return [];
@@ -146,6 +151,78 @@ export default function ReportDetailPage() {
     return metrics.slice(0, 4);
   }, [data]);
 
+  const benchmarkRepeatRate = useMemo(() => {
+    if (!data?.customerAnalysis) return 32;
+    return Math.max(24, Math.min(40, data.customerAnalysis.repeatRate + 14));
+  }, [data]);
+
+  const repeatRateGap = useMemo(() => {
+    if (!data?.customerAnalysis) return 0;
+    return Math.max(0, benchmarkRepeatRate - data.customerAnalysis.repeatRate);
+  }, [data, benchmarkRepeatRate]);
+
+  const retentionOpportunity = useMemo(() => {
+    if (!data) return 0;
+    return Math.round(estimatedLostRevenue * 0.34);
+  }, [data, estimatedLostRevenue]);
+
+  const benchmarkVisuals = useMemo(() => {
+    if (!data) return [];
+
+    const repeatRate = data.customerAnalysis?.repeatRate || 0;
+    const aov = data.salesAnalysis?.averageOrderValue || 0;
+    const benchmarkAov = Math.round(aov * 1.18);
+    const topProductShare = data.topProducts?.length && data.salesAnalysis?.totalRevenue
+      ? Math.min(100, (data.topProducts[0].revenue / data.salesAnalysis.totalRevenue) * 100)
+      : 0;
+    const healthyTopProductShare = Math.max(18, Math.round(topProductShare - 12));
+
+    return [
+      {
+        title: "Repeat Purchase Rate",
+        current: `${repeatRate.toFixed(1)}%`,
+        benchmark: `${benchmarkRepeatRate.toFixed(1)}%`,
+        progress: Math.max(8, Math.min(100, (repeatRate / benchmarkRepeatRate) * 100)),
+        note: "A lower repeat purchase rate usually means missed retention and win-back revenue.",
+      },
+      {
+        title: "Average Order Value",
+        current: fmtCurrency(aov),
+        benchmark: fmtCurrency(benchmarkAov),
+        progress: benchmarkAov > 0 ? Math.max(8, Math.min(100, (aov / benchmarkAov) * 100)) : 0,
+        note: "AOV below potential often points to weak bundle, upsell, or threshold offers.",
+      },
+      {
+        title: "Top Product Concentration",
+        current: `${topProductShare.toFixed(1)}%`,
+        benchmark: `${healthyTopProductShare.toFixed(1)}% or lower`,
+        progress: topProductShare > 0 ? Math.max(8, Math.min(100, (healthyTopProductShare / topProductShare) * 100)) : 0,
+        note: "Heavy reliance on one product increases risk and limits product mix growth.",
+      },
+    ];
+  }, [data, benchmarkRepeatRate]);
+
+  const emailRecoveryKit = useMemo(
+    () => [
+      {
+        title: "14-Day Win-Back Email",
+        subject: "We miss you - here is something for your next order",
+        goal: "Bring recent one-time buyers back quickly.",
+      },
+      {
+        title: "30-Day Reminder Offer",
+        subject: "A special offer for your next purchase",
+        goal: "Recover customers before they fully churn.",
+      },
+      {
+        title: "60-Day Last Chance Campaign",
+        subject: "Still interested? Here is a final reason to come back",
+        goal: "Reactivate colder customers with a stronger hook.",
+      },
+    ],
+    []
+  );
+
   if (loading) {
     return (
       <div className="px-4 sm:px-6 flex items-center justify-center py-32">
@@ -186,19 +263,25 @@ export default function ReportDetailPage() {
       <section className={`${CARD} p-6 md:p-8 mb-8`}>
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">Based on Uploaded Shopify Order Data</p>
         <h1 className="mt-3 text-3xl md:text-5xl font-bold tracking-tight text-gray-950">
-          {fmtCurrency(estimatedLostRevenue)}/month estimated revenue lost
+          You may be missing {fmtCurrency(estimatedLostRevenue)}/month in revenue opportunity
         </h1>
         <p className="mt-4 text-base text-gray-600 leading-relaxed max-w-3xl">
-          {data.summary || "This store is generating orders, but repeat purchase, order value, and product mix are limiting revenue growth."}
+          {data.summary || "This store is generating orders, but repeat purchase, order value, and product mix are limiting growth."}
+          {" "}
+          This audit highlights the biggest recovery opportunities and the fastest actions to take next.
         </p>
 
-        <div className="mt-6 grid sm:grid-cols-3 gap-3">
+        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Biggest Leak</p>
-            <p className="mt-2 text-sm font-semibold text-gray-950">{topLeaks[0]?.title || "Revenue leak detected"}</p>
+            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Revenue Health Score</p>
+            <p className="mt-2 text-sm font-semibold text-gray-950">{data.healthScore} / 100</p>
           </div>
           <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Quickest Fix</p>
+            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Main Opportunity</p>
+            <p className="mt-2 text-sm font-semibold text-gray-950">{topLeaks[0]?.title || "Revenue opportunity detected"}</p>
+          </div>
+          <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Quickest Win</p>
             <p className="mt-2 text-sm font-semibold text-gray-950">{quickWins[0]?.title || "Review the first recovery action"}</p>
           </div>
           <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
@@ -209,7 +292,92 @@ export default function ReportDetailPage() {
       </section>
 
       <section className={`${CARD} p-6 mb-8`}>
-        <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Top Revenue Leaks</h2>
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-[0.16em]">How We Calculated This</h2>
+            <p className="mt-2 text-sm text-gray-600 max-w-3xl">
+              We estimate revenue opportunity by comparing repeat purchase behavior, order value, and product mix against healthy growth patterns. These numbers are directional estimates designed to help you prioritize action.
+            </p>
+          </div>
+        </div>
+
+        <div className="mb-4 rounded-2xl border border-gray-200 bg-white p-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">The Exact Formula Behind The Headline Number</p>
+          <div className="mt-3 flex flex-col lg:flex-row lg:items-center gap-3 text-sm">
+            <div className="flex-1 rounded-xl bg-gray-50 border border-gray-100 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Monthly Revenue Baseline</p>
+              <p className="mt-1 text-base font-bold text-gray-950">{fmtCurrency(monthlyRevenue)}</p>
+              <p className="mt-1 text-xs text-gray-500">Average of your monthly revenue trend</p>
+            </div>
+            <span className="text-lg font-bold text-gray-400 text-center">×</span>
+            <div className="flex-1 rounded-xl bg-gray-50 border border-gray-100 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Opportunity Factor</p>
+              <p className="mt-1 text-base font-bold text-gray-950">{(opportunityModel.factor * 100).toFixed(1)}%</p>
+              <p className="mt-1 text-xs text-gray-500">
+                Health Score {data.healthScore}/100 ({(opportunityModel.scorePenalty * 100).toFixed(1)}%) + repeat-rate penalty {(opportunityModel.repeatPenalty * 100).toFixed(0)}%
+              </p>
+            </div>
+            <span className="text-lg font-bold text-gray-400 text-center">=</span>
+            <div className="flex-1 rounded-xl bg-orange-50 border border-orange-100 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-[0.14em] text-orange-500 font-semibold">Estimated Opportunity</p>
+              <p className="mt-1 text-base font-bold text-gray-950">{fmtCurrency(estimatedLostRevenue)}/month</p>
+              <p className="mt-1 text-xs text-gray-500">Directional estimate, capped between 5% and 35% of baseline</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {[
+            { label: "Your Repeat Purchase Rate", value: data.customerAnalysis ? `${data.customerAnalysis.repeatRate.toFixed(1)}%` : "—" },
+            { label: "Estimated Healthy Benchmark", value: `${benchmarkRepeatRate.toFixed(1)}%` },
+            { label: "Gap", value: `${repeatRateGap.toFixed(1)}%` },
+            { label: "Average Order Value", value: data.salesAnalysis ? fmtCurrency(data.salesAnalysis.averageOrderValue) : "—" },
+            { label: "Retention Opportunity", value: `+${fmtCurrency(retentionOpportunity)}/month` },
+          ].map((item) => (
+            <div key={item.label} className="p-4 rounded-2xl border border-gray-100 bg-gray-50/50">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">{item.label}</p>
+              <p className="mt-2 text-lg font-semibold text-gray-950">{item.value}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={`${CARD} p-6 mb-8`}>
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-[0.16em]">Benchmark Comparison</h2>
+            <p className="mt-2 text-sm text-gray-600 max-w-3xl">
+              These visual benchmarks help show where the biggest recovery gap sits right now.
+            </p>
+          </div>
+        </div>
+        <div className="grid lg:grid-cols-3 gap-4">
+          {benchmarkVisuals.map((item) => (
+            <div key={item.title} className="rounded-2xl border border-gray-100 bg-gray-50/50 p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-gray-950">{item.title}</p>
+                  <p className="mt-2 text-2xl font-bold tracking-tight text-gray-950">{item.current}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Benchmark</p>
+                  <p className="mt-2 text-sm font-semibold text-emerald-600">{item.benchmark}</p>
+                </div>
+              </div>
+              <div className="mt-4 h-2 rounded-full bg-gray-200 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-orange-400 to-emerald-500"
+                  style={{ width: `${item.progress}%` }}
+                />
+              </div>
+              <p className="mt-3 text-sm text-gray-600 leading-relaxed">{item.note}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={`${CARD} p-6 mb-8`}>
+        <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Top Revenue Opportunities</h2>
         <div className="space-y-4">
           {topLeaks.map((leak) => (
             <div key={leak.title} className="p-5 rounded-2xl border border-gray-100 bg-gray-50/50">
@@ -234,13 +402,13 @@ export default function ReportDetailPage() {
                       <p className="text-[13px] font-semibold text-gray-900">{leak.time}</p>
                     </div>
                     <div className="px-3 py-2 rounded-xl bg-white border border-gray-100">
-                      <p className="text-[10px] text-gray-400 uppercase tracking-[0.14em]">Status</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-[0.14em]">Action</p>
                       <p className="text-[13px] font-semibold text-orange-600">Recovery Ready</p>
                     </div>
                   </div>
 
                   <p className="text-sm text-gray-700 leading-relaxed">
-                    <span className="font-semibold text-gray-900">Why It Happens:</span> {leak.why}
+                    <span className="font-semibold text-gray-900">Why This Matters:</span> {leak.why}
                   </p>
                   <p className="mt-2 text-sm text-gray-700 leading-relaxed">
                     <span className="font-semibold text-gray-900">Recommended Action:</span> {leak.action}
@@ -253,7 +421,7 @@ export default function ReportDetailPage() {
       </section>
 
       <section className={`${CARD} p-6 mb-8`}>
-        <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Quick Wins</h2>
+        <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Fastest Recovery Actions</h2>
         <div className="grid md:grid-cols-3 gap-3">
           {quickWins.map((item) => (
             <div key={item.title} className="p-4 rounded-2xl border border-gray-100 bg-gray-50/50">
@@ -264,16 +432,17 @@ export default function ReportDetailPage() {
                 <span>{item.difficulty}</span>
                 <span>{item.time}</span>
               </div>
+              <p className="mt-3 text-xs text-gray-500">Use this this week to test recovery potential.</p>
             </div>
           ))}
         </div>
       </section>
 
       <section className={`${CARD} p-6 mb-8`}>
-        <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Revenue Recovery Plan</h2>
+        <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Your Revenue Recovery Plan</h2>
         <div className="grid md:grid-cols-3 gap-4 text-sm">
           <div>
-            <p className="font-semibold text-gray-900">Now</p>
+            <p className="font-semibold text-gray-900">This Week</p>
             <ul className="mt-3 space-y-2 text-gray-600">
               {data.recommendations.slice(0, 3).map((item) => (
                 <li key={item}>{normalizeSentence(item)}</li>
@@ -281,7 +450,7 @@ export default function ReportDetailPage() {
             </ul>
           </div>
           <div>
-            <p className="font-semibold text-gray-900">Next</p>
+            <p className="font-semibold text-gray-900">Next 30 Days</p>
             <ul className="mt-3 space-y-2 text-gray-600">
               {data.problems.slice(0, 3).map((item) => (
                 <li key={item}>Monitor: {normalizeSentence(item)}</li>
@@ -289,7 +458,7 @@ export default function ReportDetailPage() {
             </ul>
           </div>
           <div>
-            <p className="font-semibold text-gray-900">Later</p>
+            <p className="font-semibold text-gray-900">Ongoing</p>
             <ul className="mt-3 space-y-2 text-gray-600">
               {[
                 "Track returning customer rate weekly",
@@ -300,6 +469,33 @@ export default function ReportDetailPage() {
               ))}
             </ul>
           </div>
+        </div>
+      </section>
+
+      <section className={`${CARD} p-6 mb-8`}>
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-[0.16em]">Email Recovery Kit</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Ready-to-use campaign ideas based on the recovery opportunities found in your store.
+            </p>
+          </div>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4">
+          {emailRecoveryKit.map((item) => (
+            <div key={item.title} className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4">
+              <p className="text-sm font-semibold text-gray-900">{item.title}</p>
+              <p className="mt-3 text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Subject</p>
+              <p className="mt-1 text-sm text-gray-800">{item.subject}</p>
+              <p className="mt-3 text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Goal</p>
+              <p className="mt-1 text-sm text-gray-700">{item.goal}</p>
+              <div className="mt-4 rounded-xl bg-white border border-gray-100 p-3">
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  Hi {"{{first_name}}"}, we noticed it has been a while since your last order. If you have been thinking about coming back, here is a small reason to do it today.
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -317,18 +513,18 @@ export default function ReportDetailPage() {
 
       <section className="bg-orange-50 rounded-2xl border border-orange-100 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-gray-950">Unlock the Full Revenue Leak Report</h2>
+          <h2 className="text-lg font-bold text-gray-950">Unlock Your Full Recovery Plan</h2>
           <p className="mt-2 text-sm text-gray-600">
-            One-time unlock. No subscription required. Get the full leak breakdown and the recovery plan.
+            Get the full calculation breakdown, every recovery action, and the complete email recovery kit.
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
           <UnlockButton
-            label="Unlock Full Report - $19"
+            label="Unlock Full Recovery Plan - $19"
             className="inline-flex items-center gap-1.5 rounded-lg bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
           />
           <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-gray-900 bg-white rounded-lg hover:bg-gray-100 transition-colors border border-black/5">
-            Upload My CSV
+            Upload Another Store
           </Link>
         </div>
       </section>

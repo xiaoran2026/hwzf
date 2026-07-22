@@ -156,24 +156,42 @@ export default function UploadPage() {
 
       <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-6">
         <section className="bg-white rounded-2xl border border-gray-100 shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">Upload Entry</p>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-gray-950">Upload Your Shopify CSV</h1>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">Free Audit</p>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight text-gray-950">Upload Your Shopify Orders</h1>
           <p className="mt-3 text-sm text-gray-600 leading-relaxed max-w-2xl">
-            We only need your order export to estimate revenue leaks and recovery opportunities.
+            We only need your order export to estimate lost revenue opportunities and generate your recovery plan.
             No Shopify API required.
           </p>
 
+          <div className="mt-6 rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">Your audit includes</p>
+            <div className="mt-4 grid sm:grid-cols-2 gap-3 text-sm text-gray-700">
+              {[
+                "Revenue Health Score",
+                "Estimated Revenue Opportunity",
+                "Customer Retention Analysis",
+                "Product Growth Opportunities",
+                "Recovery Actions",
+                "Email Recovery Templates",
+              ].map((item) => (
+                <div key={item} className="rounded-xl bg-white border border-gray-100 px-4 py-3">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
           {!canUpload && (
             <div className="mt-5 rounded-2xl border border-orange-100 bg-orange-50 p-4">
-              <p className="text-sm font-semibold text-gray-950">Your free report preview has been used.</p>
+              <p className="text-sm font-semibold text-gray-950">Your free audit has already been used.</p>
               <p className="mt-1 text-sm text-gray-600">
-                Upgrade to unlock more reports and full revenue recovery actions.
+                Upgrade to unlock the full recovery plan and generate additional reports.
               </p>
               <Link
                 href="/billing"
                 className="mt-4 inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors"
               >
-                Upgrade Now
+                Unlock Full Plan
               </Link>
             </div>
           )}
@@ -202,7 +220,7 @@ export default function UploadPage() {
                 {!file ? (
                   <div className="text-center">
                     <p className="text-sm font-semibold text-gray-900">Choose your CSV file</p>
-                    <p className="mt-2 text-sm text-gray-600">Supported: Shopify export, WooCommerce CSV, Amazon report</p>
+                    <p className="mt-2 text-sm text-gray-600">Upload your exported Shopify order CSV to generate your free revenue audit.</p>
                     <label className="mt-5 inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold rounded-lg bg-gray-950 text-white cursor-pointer hover:bg-gray-800 transition-colors">
                       Select CSV
                       <input
@@ -247,8 +265,29 @@ export default function UploadPage() {
                 <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
                   <span>Max 10 MB</span>
                   <span>Max 50k rows</span>
-                  <span>Raw files are not kept longer than necessary</span>
+                  <span>Raw CSV is deleted automatically after analysis</span>
                 </div>
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-700">Your Data Stays Yours</p>
+                <ul className="mt-3 space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="mt-0.5 text-emerald-600">✓</span>
+                    <span>No customer emails, names, or addresses required — order-level data only.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-0.5 text-emerald-600">✓</span>
+                    <span>Your raw CSV is permanently deleted from our servers right after analysis.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-0.5 text-emerald-600">✓</span>
+                    <span>Your store data is never sold or shared with third parties.</span>
+                  </li>
+                </ul>
+                <Link href="/privacy" className="mt-3 inline-flex text-xs font-semibold text-emerald-700 hover:text-emerald-800">
+                  Read our Privacy Policy →
+                </Link>
               </div>
 
               {error && (
@@ -264,7 +303,7 @@ export default function UploadPage() {
                   onClick={handleUpload}
                   className="mt-5 w-full inline-flex items-center justify-center px-4 py-3 text-sm font-semibold rounded-xl bg-gray-950 text-white hover:bg-gray-800 transition-colors disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                 >
-                  Generate My Report
+                  Get My Free Audit
                 </button>
               )}
 
@@ -272,9 +311,9 @@ export default function UploadPage() {
                 <div className="mt-5 rounded-2xl border border-gray-100 bg-white p-4">
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-semibold text-gray-900">
-                      {phase === "uploading" && "Uploading CSV"}
-                      {phase === "processing" && "Generating revenue leak report"}
-                      {phase === "completed" && "Report ready"}
+                      {phase === "uploading" && "Uploading your order data"}
+                      {phase === "processing" && "Generating your revenue recovery audit"}
+                      {phase === "completed" && "Your audit is ready"}
                       {phase === "error" && "Upload failed"}
                     </span>
                     <span className="text-gray-500">{progress}%</span>
@@ -294,7 +333,7 @@ export default function UploadPage() {
                         href={`/reports/${reportId}`}
                         className="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-gray-950 text-white hover:bg-gray-800 transition-colors"
                       >
-                        View Report
+                        View My Audit
                       </Link>
                       <button
                         type="button"
@@ -325,11 +364,12 @@ export default function UploadPage() {
 
         <aside className="space-y-4">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">Privacy</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">What You'll See</p>
             <ul className="mt-4 space-y-3 text-sm text-gray-600">
-              <li>We only use your uploaded CSV to generate the report.</li>
-              <li>No Shopify API access is required.</li>
-              <li>Only the fields needed for the report are used.</li>
+              <li>Revenue Health Score</li>
+              <li>Estimated revenue opportunity</li>
+              <li>Top growth blockers</li>
+              <li>Recommended recovery actions</li>
             </ul>
           </div>
 

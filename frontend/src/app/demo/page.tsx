@@ -8,6 +8,7 @@ const fmtCurrency = (v: number) =>
 
 const demo = {
   storeName: "Demo Store",
+  healthScore: 62,
   estimatedLostRevenue: 12370,
   biggestLeak: "Repeat Purchase Drop",
   quickestFix: "Launch a win-back campaign",
@@ -54,21 +55,44 @@ export default function DemoPage() {
   return (
     <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-10">
       <div className="mb-8">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-[0.18em]">Demo Report</p>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-[0.18em]">Example Report</p>
         <h1 className="mt-2 text-3xl md:text-5xl font-bold text-gray-950 tracking-tight">
-          {fmtCurrency(demo.estimatedLostRevenue)}/month estimated revenue lost
+          See What a Revenue Recovery Audit Looks Like
         </h1>
         <p className="mt-4 text-base text-gray-600 max-w-3xl leading-relaxed">
-          {demo.summary}
+          This example shows the kind of revenue opportunities, benchmark gaps, and recovery actions you will see after uploading your Shopify orders.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors">
+            Get Free Audit
+          </Link>
+          <UnlockButton
+            label="Unlock Full Recovery Plan"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+          />
+        </div>
+      </div>
+
+      <div className="mb-8 rounded-2xl border border-gray-100 bg-white p-6">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">Sample audit</p>
+        <h1 className="mt-2 text-3xl md:text-5xl font-bold text-gray-950 tracking-tight">
+          You may be missing {fmtCurrency(demo.estimatedLostRevenue)}/month in revenue opportunity
+        </h1>
+        <p className="mt-4 text-base text-gray-600 max-w-3xl leading-relaxed">
+          {demo.summary} This is a sample audit based on demo store data. Your actual numbers will depend on your uploaded order history.
         </p>
 
-        <div className="mt-6 grid sm:grid-cols-3 gap-3">
+        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div className="p-4 rounded-2xl bg-white border border-gray-100">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Biggest Leak</p>
+            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Revenue Health Score</p>
+            <p className="mt-2 text-sm font-semibold text-gray-950">{demo.healthScore} / 100</p>
+          </div>
+          <div className="p-4 rounded-2xl bg-white border border-gray-100">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Main Opportunity</p>
             <p className="mt-2 text-sm font-semibold text-gray-950">{demo.biggestLeak}</p>
           </div>
           <div className="p-4 rounded-2xl bg-white border border-gray-100">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Quickest Fix</p>
+            <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Quickest Win</p>
             <p className="mt-2 text-sm font-semibold text-gray-950">{demo.quickestFix}</p>
           </div>
           <div className="p-4 rounded-2xl bg-white border border-gray-100">
@@ -76,21 +100,78 @@ export default function DemoPage() {
             <p className="mt-2 text-sm font-semibold text-gray-950">{demo.recoveryPotential}</p>
           </div>
         </div>
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors">
-            Upload My CSV
-          </Link>
-          <UnlockButton
-            label="Unlock Full Report"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
-          />
-        </div>
       </div>
 
       <div className="space-y-8">
         <section className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Top Revenue Leaks</h2>
+          <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">How We Calculated This</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            {[
+              { label: "Your Repeat Purchase Rate", value: "18%" },
+              { label: "Estimated Healthy Benchmark", value: "32%" },
+              { label: "Gap", value: "14%" },
+              { label: "Average Order Value", value: "$42" },
+              { label: "Retention Opportunity", value: "+$4,250/month" },
+            ].map((item) => (
+              <div key={item.label} className="p-4 rounded-2xl border border-gray-100 bg-gray-50/50">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">{item.label}</p>
+                <p className="mt-2 text-lg font-semibold text-gray-950">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Benchmark Comparison</h2>
+          <div className="grid lg:grid-cols-3 gap-4">
+            {[
+              {
+                title: "Repeat Purchase Rate",
+                current: "18%",
+                benchmark: "32%",
+                progress: 56,
+                note: "This store is missing repeat revenue because too many first-time buyers never return.",
+              },
+              {
+                title: "Average Order Value",
+                current: "$42",
+                benchmark: "$50",
+                progress: 84,
+                note: "There is room to lift AOV through bundles, thresholds, and simple upsell offers.",
+              },
+              {
+                title: "Top Product Concentration",
+                current: "41%",
+                benchmark: "29% or lower",
+                progress: 70,
+                note: "Revenue depends too heavily on one product, which limits product mix growth.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-gray-100 bg-gray-50/50 p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-950">{item.title}</p>
+                    <p className="mt-2 text-2xl font-bold tracking-tight text-gray-950">{item.current}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Benchmark</p>
+                    <p className="mt-2 text-sm font-semibold text-emerald-600">{item.benchmark}</p>
+                  </div>
+                </div>
+                <div className="mt-4 h-2 rounded-full bg-gray-200 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-orange-400 to-emerald-500"
+                    style={{ width: `${item.progress}%` }}
+                  />
+                </div>
+                <p className="mt-3 text-sm text-gray-600 leading-relaxed">{item.note}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Top Revenue Opportunities</h2>
           <div className="space-y-4">
             {demo.leaks.map((p) => (
               <div key={p.title} className="p-5 rounded-2xl border border-gray-100 bg-gray-50/50">
@@ -121,7 +202,7 @@ export default function DemoPage() {
                     </div>
 
                     <p className="text-sm text-gray-700 leading-relaxed">
-                      <span className="font-semibold text-gray-900">Why It Happens:</span> {p.why}
+                    <span className="font-semibold text-gray-900">Why This Matters:</span> {p.why}
                     </p>
                     <p className="mt-2 text-sm text-gray-700 leading-relaxed">
                       <span className="font-semibold text-gray-900">Recommended Action:</span> {p.action}
@@ -134,7 +215,7 @@ export default function DemoPage() {
         </section>
 
         <section className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Quick Wins</h2>
+          <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Fastest Recovery Actions</h2>
           <div className="grid md:grid-cols-3 gap-3">
             {demo.quickWins.map((item) => (
               <div key={item.title} className="p-4 rounded-2xl border border-gray-100 bg-gray-50/50">
@@ -145,6 +226,7 @@ export default function DemoPage() {
                   <span>{item.difficulty}</span>
                   <span>{item.time}</span>
                 </div>
+                <p className="mt-3 text-xs text-gray-500">Use this this week to test recovery potential.</p>
               </div>
             ))}
           </div>
@@ -180,20 +262,56 @@ export default function DemoPage() {
           </div>
         </section>
 
+        <section className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h2 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-[0.16em]">Email Recovery Kit</h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              {
+                title: "14-Day Win-Back Email",
+                subject: "We miss you - here is something for your next order",
+                goal: "Bring recent one-time buyers back quickly",
+              },
+              {
+                title: "30-Day Reminder Offer",
+                subject: "A special offer for your next purchase",
+                goal: "Recover customers before they fully churn",
+              },
+              {
+                title: "60-Day Last Chance Campaign",
+                subject: "Still interested? Here is a final reason to come back",
+                goal: "Reactivate colder customers with a stronger hook",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4">
+                <p className="text-sm font-semibold text-gray-900">{item.title}</p>
+                <p className="mt-3 text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Subject</p>
+                <p className="mt-1 text-sm text-gray-800">{item.subject}</p>
+                <p className="mt-3 text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Goal</p>
+                <p className="mt-1 text-sm text-gray-700">{item.goal}</p>
+                <div className="mt-4 rounded-xl bg-white border border-gray-100 p-3">
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    Hi {"{{first_name}}"}, we noticed it has been a while since your last order. If you have been thinking about coming back, here is a small reason to do it today.
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section className="bg-orange-50 rounded-2xl border border-orange-100 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-lg font-bold text-gray-950">Unlock the Full Revenue Leak Report</h2>
+            <h2 className="text-lg font-bold text-gray-950">Unlock Your Full Recovery Plan</h2>
             <p className="mt-2 text-sm text-gray-600">
-              See all leak findings, every recovery action, and your full estimated revenue opportunity.
+              See all recovery opportunities, calculation details, and the complete email recovery kit.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <UnlockButton
-              label="Unlock Full Report - $19"
+              label="Unlock Full Recovery Plan - $19"
               className="inline-flex items-center gap-1.5 rounded-lg bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
             />
             <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-gray-900 bg-white rounded-lg hover:bg-gray-100 transition-colors border border-black/5">
-              Upload My CSV
+              Get Free Audit
             </Link>
           </div>
         </section>

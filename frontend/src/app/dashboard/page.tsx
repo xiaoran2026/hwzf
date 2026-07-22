@@ -29,6 +29,15 @@ type DashboardData = {
 const fmtCurrency = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v);
 
+function estimateOpportunityFromDashboard(data: DashboardData | null) {
+  if (!data) return 0;
+  const monthlyRevenue = Math.max(0, data.totalRevenue / 6);
+  const repeatPenalty = data.repeatRate < 35 ? 0.08 : 0.03;
+  const scorePenalty = ((100 - data.healthScore) / 100) * 0.55;
+  const factor = Math.min(0.35, Math.max(0.05, scorePenalty + repeatPenalty));
+  return Math.round(monthlyRevenue * factor);
+}
+
 function formatDate(value?: string | null) {
   if (!value) return "—";
   try {
@@ -99,14 +108,16 @@ export default function DashboardPage() {
     [stores, activeStoreId]
   );
 
+  const estimatedOpportunity = useMemo(() => estimateOpportunityFromDashboard(data), [data]);
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pb-8">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">Report Center</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-950">Your Revenue Leak Reports</h1>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-950">Your Revenue Recovery Reports</h1>
           <p className="mt-2 text-sm text-gray-600">
-            See your latest estimated revenue loss, top leak, and next recovery action.
+            See your latest revenue opportunity, biggest growth blocker, and next recovery action.
           </p>
         </div>
 
@@ -129,7 +140,7 @@ export default function DashboardPage() {
               href={`/stores/${activeStoreId}/upload`}
               className="inline-flex items-center px-4 py-2.5 text-sm font-semibold rounded-xl bg-gray-950 text-white hover:bg-gray-800 transition-colors"
             >
-              Upload New CSV
+              Upload New Store Data
             </Link>
           )}
         </div>
@@ -143,16 +154,16 @@ export default function DashboardPage() {
 
       {!loading && stores.length === 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center">
-          <h2 className="text-lg font-semibold text-gray-950">No stores yet</h2>
+          <h2 className="text-lg font-semibold text-gray-950">No audit yet</h2>
           <p className="mt-2 text-sm text-gray-600">
-            Add a store and upload a Shopify CSV to generate your first revenue leak report.
+            Upload your Shopify orders to see your revenue score, missed growth opportunities, and first recovery actions.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <Link href="/stores" className="inline-flex items-center px-4 py-2.5 text-sm font-semibold rounded-xl bg-gray-950 text-white hover:bg-gray-800 transition-colors">
-              Add Store
+              Get Free Audit
             </Link>
             <Link href="/demo" className="inline-flex items-center px-4 py-2.5 text-sm font-semibold rounded-xl bg-orange-500 text-white hover:bg-orange-600 transition-colors">
-              View Demo Report
+              See Example Report
             </Link>
           </div>
         </div>
@@ -180,7 +191,11 @@ export default function DashboardPage() {
                   {data.summary || "Upload data to see revenue leak findings and recovery actions."}
                 </p>
 
-                <div className="mt-5 grid sm:grid-cols-3 gap-3">
+                <div className="mt-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-3">
+                  <div className="p-4 rounded-2xl bg-orange-50 border border-orange-100">
+                    <p className="text-[11px] uppercase tracking-[0.16em] text-orange-500 font-semibold">Estimated Opportunity</p>
+                    <p className="mt-2 text-sm font-semibold text-gray-950">{fmtCurrency(estimatedOpportunity)}/month</p>
+                  </div>
                   <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
                     <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Latest Report</p>
                     <p className="mt-2 text-sm font-semibold text-gray-950">
@@ -205,19 +220,28 @@ export default function DashboardPage() {
                       href={`/reports/${data.latestReport.reportId}`}
                       className="inline-flex items-center px-4 py-2.5 text-sm font-semibold rounded-xl bg-gray-950 text-white hover:bg-gray-800 transition-colors"
                     >
-                      Open Latest Report
+                      Open Latest Audit
                     </Link>
                   )}
                   <Link
                     href={`/stores/${activeStore.storeId}/upload`}
                     className="inline-flex items-center px-4 py-2.5 text-sm font-semibold rounded-xl bg-gray-100 text-gray-900 hover:bg-gray-200 transition-colors"
                   >
-                    Upload New CSV
+                    Upload New Store Data
                   </Link>
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-3">
+                <div className="p-4 rounded-2xl border border-gray-100 bg-white sm:col-span-2">
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Latest Opportunity Summary</p>
+                  <p className="mt-2 text-sm font-semibold text-gray-950">
+                    Main opportunity: {data.repeatRate < 35 ? "Improve repeat purchase rate" : "Increase average order value"}
+                  </p>
+                  <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                    Next action: {data.repeatRate < 35 ? "Launch a win-back email campaign and monitor returning customer rate." : "Test one bundle offer and one upsell message on top-selling products."}
+                  </p>
+                </div>
                 <div className="p-4 rounded-2xl border border-gray-100 bg-white">
                   <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Revenue</p>
                   <p className="mt-2 text-2xl font-bold tracking-tight text-gray-950">{fmtCurrency(data.totalRevenue || 0)}</p>

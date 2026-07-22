@@ -157,6 +157,16 @@ export default function ReportsPage() {
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="p-4 rounded-2xl bg-orange-50 border border-orange-100 sm:col-span-2">
+                    <p className="text-[11px] uppercase tracking-[0.16em] text-orange-500 font-semibold">Next Action</p>
+                    <p className="mt-2 text-sm font-semibold text-gray-950">
+                      {topLeakText(latestReport) === "Repeat purchase leak"
+                        ? "Launch a win-back campaign and review returning customer behavior."
+                        : topLeakText(latestReport) === "Low AOV opportunity"
+                          ? "Test one bundle offer and one upsell message on top products."
+                          : "Reduce dependence on the top product and promote complementary products."}
+                    </p>
+                  </div>
                   <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
                     <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">Top Leak</p>
                     <p className="mt-2 text-sm font-semibold text-gray-950">{topLeakText(latestReport)}</p>
@@ -202,6 +212,13 @@ export default function ReportsPage() {
                         <span>Top leak: {topLeakText(report)}</span>
                         <span>Health score: {report.healthScore}</span>
                       </div>
+                      <p className="mt-3 text-sm text-gray-600">
+                        Next action: {topLeakText(report) === "Repeat purchase leak"
+                          ? "Launch a win-back email and monitor repeat purchase rate."
+                          : topLeakText(report) === "Low AOV opportunity"
+                            ? "Test a bundle or upsell on top-selling products."
+                            : "Promote complementary products and reduce top-product concentration."}
+                      </p>
                     </div>
                     <div className="flex items-center gap-3">
                       <Link
