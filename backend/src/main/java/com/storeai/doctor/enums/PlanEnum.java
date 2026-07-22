@@ -12,7 +12,7 @@ import java.util.*;
  * - PRO: legacy plan, maps to GROWTH
  */
 public enum PlanEnum {
-    FREE(1, 1, 1, 500, 0.0, Set.of("AI_INSIGHTS")),
+    FREE(1, 1, 1, 50000, 0.0, Set.of("AI_INSIGHTS")),
     STARTER(3, -1, -1, 50000, 29.0, Set.of(
             "AI_INSIGHTS", "AI_FORECAST", "GROWTH_OPPORTUNITIES",
             "HISTORICAL_TRENDS", "PDF_EXPORT")),
