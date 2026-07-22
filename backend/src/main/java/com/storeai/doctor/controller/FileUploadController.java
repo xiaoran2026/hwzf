@@ -120,6 +120,18 @@ public class FileUploadController {
             }
         }
 
+        // 2.6 Check subscription upload limit BEFORE creating any records.
+        //     Previously this ran after the uploaded_file row was inserted, so the
+        //     current upload counted against its own quota and a Free user's first
+        //     upload was always rejected (1 < 1 == false).
+        if (!subscriptionService.canUpload(userId)) {
+            PlanEnum plan = subscriptionService.getUserPlan(userId);
+            String upgradeMsg = plan.isFree()
+                ? "You have reached your Free plan upload limit. Upgrade to Starter to upload more data."
+                : "You have reached your monthly upload limit. Upgrade to Pro for unlimited uploads.";
+            return ApiResponse.error(upgradeMsg);
+        }
+
         // 3. Save file to disk
         Path targetPath;
         try {
@@ -160,11 +172,7 @@ public class FileUploadController {
         try (FileInputStream fis = new FileInputStream(targetPath.toFile())) {
             orders = csvParseService.parseCsv(fis);
         } catch (Exception e) {
-            savedTask.setStatus("FAILED");
-            savedTask.setProgress(0);
-            analysisTaskRepository.save(savedTask);
-            savedFile.setStatus("FAILED");
-            uploadedFileRepository.save(savedFile);
+            cleanupFailedUpload(savedTask, savedFile);
             log.error("CSV parse failed for file: {}", originalFilename, e);
             return ApiResponse.error("CSV parse failed: " + e.getMessage());
         } finally {
@@ -173,54 +181,27 @@ public class FileUploadController {
 
         // Check empty file
         if (orders.isEmpty()) {
-            savedTask.setStatus("FAILED");
-            savedTask.setProgress(0);
-            analysisTaskRepository.save(savedTask);
-            savedFile.setStatus("FAILED");
-            uploadedFileRepository.save(savedFile);
+            cleanupFailedUpload(savedTask, savedFile);
             return ApiResponse.error("CSV file contains no valid order records. Please check the file format.");
         }
 
         // Check row count limit
         if (orders.size() > MAX_CSV_ROWS) {
-            savedTask.setStatus("FAILED");
-            savedTask.setProgress(0);
-            analysisTaskRepository.save(savedTask);
-            savedFile.setStatus("FAILED");
-            uploadedFileRepository.save(savedFile);
+            cleanupFailedUpload(savedTask, savedFile);
             return ApiResponse.error("CSV file exceeds maximum limit of " + MAX_CSV_ROWS + " rows.");
         }
 
-        // Check subscription upload limit
-        if (!subscriptionService.canUpload(userId)) {
-            savedTask.setStatus("FAILED");
-            savedTask.setProgress(0);
-            analysisTaskRepository.save(savedTask);
-            savedFile.setStatus("FAILED");
-            uploadedFileRepository.save(savedFile);
-            PlanEnum plan = subscriptionService.getUserPlan(userId);
-            String upgradeMsg = plan.isFree()
-                ? "You have reached your Free plan upload limit. Upgrade to Starter to upload more data."
-                : "You have reached your monthly upload limit. Upgrade to Pro for unlimited uploads.";
-            return ApiResponse.error(upgradeMsg);
-        }
-
-        if (!subscriptionService.canUploadRows(userId, orders.size())) {
-            savedTask.setStatus("FAILED");
-            savedTask.setProgress(0);
-            analysisTaskRepository.save(savedTask);
-            savedFile.setStatus("FAILED");
-            uploadedFileRepository.save(savedFile);
-            return ApiResponse.error("CSV row count exceeds your plan limit of " + PlanEnum.fromString(subscriptionService.getUserPlan(userId).name()).getMaxCsvRows() + " rows.");
+        // Check row quota against plan limit.
+        // (The upload-count check already ran before record creation; calling
+        // canUploadRows here would re-count the just-inserted row and fail.)
+        if (orders.size() > subscriptionService.getUserPlan(userId).getMaxCsvRows()) {
+            cleanupFailedUpload(savedTask, savedFile);
+            return ApiResponse.error("CSV row count exceeds your plan limit of " + subscriptionService.getUserPlan(userId).getMaxCsvRows() + " rows.");
         }
 
         // Check report creation limit
         if (!subscriptionService.canCreateReport(userId)) {
-            savedTask.setStatus("FAILED");
-            savedTask.setProgress(0);
-            analysisTaskRepository.save(savedTask);
-            savedFile.setStatus("FAILED");
-            uploadedFileRepository.save(savedFile);
+            cleanupFailedUpload(savedTask, savedFile);
             PlanEnum reportPlan = subscriptionService.getUserPlan(userId);
             String reportLimitMsg = reportPlan.isFree()
                 ? "You have reached your Free plan limit of 1 AI report. Upgrade to Starter for up to 10 reports per month."
@@ -246,11 +227,7 @@ public class FileUploadController {
             orderRecordRepository.saveAll(records);
             log.info("Saved {} order records for task: {}", records.size(), savedTask.getId());
         } catch (Exception e) {
-            savedTask.setStatus("FAILED");
-            savedTask.setProgress(0);
-            analysisTaskRepository.save(savedTask);
-            savedFile.setStatus("FAILED");
-            uploadedFileRepository.save(savedFile);
+            cleanupFailedUpload(savedTask, savedFile);
             log.error("Failed to save order records", e);
             return ApiResponse.error("Failed to save order records: " + e.getMessage());
         }
@@ -297,6 +274,25 @@ public class FileUploadController {
             }
         } catch (Exception e) {
             log.warn("[Upload] Failed to delete raw CSV {}: {}", path.getFileName(), e.getMessage());
+        }
+    }
+
+    /**
+     * Remove task and uploaded_file records for a failed upload, so a failed
+     * attempt does not consume the user's upload quota (critical for the single
+     * free audit) and does not trip the 24h duplicate check on retry.
+     * Task is deleted first because it holds the FK to uploaded_file.
+     */
+    private void cleanupFailedUpload(AnalysisTask task, UploadedFile file) {
+        try {
+            if (task != null && task.getId() != null) {
+                analysisTaskRepository.delete(task);
+            }
+            if (file != null && file.getId() != null) {
+                uploadedFileRepository.delete(file);
+            }
+        } catch (Exception e) {
+            log.warn("[Upload] Failed to clean up failed upload records: {}", e.getMessage());
         }
     }
 
