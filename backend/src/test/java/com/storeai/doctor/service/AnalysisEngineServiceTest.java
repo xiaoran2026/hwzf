@@ -152,10 +152,6 @@ class AnalysisEngineServiceTest {
         // US #3: 59.98 + 29.97 = 89.95
         assertEquals("US", stats.get(2).getCountry());
         assertEquals(new BigDecimal("89.95"), stats.get(2).getRevenue());
-
-        // GB #3: 149.99
-        assertEquals("GB", stats.get(2).getCountry());
-        assertEquals(new BigDecimal("149.99"), stats.get(2).getRevenue());
     }
 
     @Test
