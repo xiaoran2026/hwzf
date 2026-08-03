@@ -103,14 +103,14 @@ const faqJsonLd = {
 };
 
 const benchmarks = [
-  { category: "Beauty & Skincare", avgAOV: "", healthyAOV: "", range: "-" },
-  { category: "Pet Supplies", avgAOV: "", healthyAOV: "", range: "-" },
-  { category: "Health & Supplements", avgAOV: "", healthyAOV: "", range: "-" },
-  { category: "Apparel & Fashion", avgAOV: "", healthyAOV: "", range: "-" },
-  { category: "Home & Furniture", avgAOV: "", healthyAOV: "", range: "-" },
-  { category: "Food & Beverage", avgAOV: "", healthyAOV: "", range: "-" },
-  { category: "Electronics & Gadgets", avgAOV: "", healthyAOV: "", range: "-" },
-  { category: "Jewelry & Accessories", avgAOV: "", healthyAOV: "", range: "-" },
+  { category: "Beauty & Skincare", avgAOV: "$52", healthyAOV: "$78", range: "$32-$120" },
+  { category: "Pet Supplies", avgAOV: "$48", healthyAOV: "$65", range: "$20-$95" },
+  { category: "Health & Supplements", avgAOV: "$42", healthyAOV: "$68", range: "$18-$110" },
+  { category: "Apparel & Fashion", avgAOV: "$68", healthyAOV: "$95", range: "$25-$200" },
+  { category: "Home & Furniture", avgAOV: "$185", healthyAOV: "$260", range: "$60-$800" },
+  { category: "Food & Beverage", avgAOV: "$35", healthyAOV: "$52", range: "$12-$75" },
+  { category: "Electronics & Gadgets", avgAOV: "$95", healthyAOV: "$145", range: "$30-$350" },
+  { category: "Jewelry & Accessories", avgAOV: "$58", healthyAOV: "$85", range: "$15-$180" },
 ];
 
 const aovLeaks = [
@@ -130,13 +130,13 @@ const aovLeaks = [
     title: "Free shipping threshold misalignment",
     desc: "Threshold is set too high (customers give up) or too low (no incentive to add more).",
     impact: "Either lost conversions or missed AOV opportunities.",
-    fix: "Set threshold at 1.5x your current AOV. For example, if AOV is , offer free shipping at . This nudges 25-35% of customers to add one more item.",
+    fix: "Set threshold at 1.5x your current AOV. For example, if AOV is $52, offer free shipping at $78. This nudges 25-35% of customers to add one more item.",
   },
   {
     title: "No minimum order value (MOV) for promotions",
     desc: "Discount codes apply to any order, not just orders above a threshold.",
     impact: "Discounts cannibalize margin without lifting AOV.",
-    fix: "Run 'spend , get 15% off' instead of '15% off everything'. This turns discounts into AOV drivers.",
+    fix: "Run 'spend $75, get 15% off' instead of '15% off everything'. This turns discounts into AOV drivers.",
   },
 ];
 
@@ -162,7 +162,7 @@ const tactics = [
   {
     title: "Offer a tiered discount structure",
     category: "All categories",
-    desc: "Instead of one flat discount, use tiers: Spend  get 10% off, spend  get 15% off, spend  get 20% off. This naturally pushes AOV upward.",
+    desc: "Instead of one flat discount, use tiers: Spend $50 get 10% off, spend $75 get 15% off, spend $100 get 20% off. This naturally pushes AOV upward.",
     lift: "+18-30% AOV",
   },
   {
@@ -246,9 +246,9 @@ export default function BlogPostPage() {
           <div className="rounded-2xl border border-black/8 bg-white p-5 my-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">TL;DR</p>
             <ul className="mt-3 space-y-2 text-sm text-gray-700 leading-relaxed">
-              <li>The <strong>average Shopify AOV across all categories is </strong>, but category matters more than any other factor.</li>
-              <li>Most stores have a <strong>AOV leak</strong> — customers buying single products without bundle or upsell support.</li>
-              <li>A 20% AOV gap to your category benchmark can mean <strong>,000-,000/month</strong> in missed revenue.</li>
+              <li>The <strong>average Shopify AOV across all categories is $62</strong>, but category matters more than any other factor.</li>
+              <li>Most stores have an <strong>AOV leak</strong> — customers buying single products without bundle or upsell support.</li>
+              <li>A 20% AOV gap to your category benchmark can mean <strong>$5,000-$15,000/month</strong> in missed revenue.</li>
               <li>Not sure where you stand? <Link href="/register" className="text-gray-900 underline font-semibold">Upload your Shopify order CSV</Link> and get a free AOV audit in minutes.</li>
             </ul>
           </div>
@@ -315,9 +315,9 @@ export default function BlogPostPage() {
 
             <h3 className="text-xl font-bold tracking-tight mt-8 mb-3">Key insights from the data</h3>
             <ol className="space-y-3 text-sm text-gray-700 leading-relaxed">
-              <li><strong>Home & Furniture has the highest AOV</strong> — average , healthy at . But this category also has the lowest repeat purchase rate, so stores need to balance AOV with retention.</li>
-              <li><strong>Beauty and supplements have the most room to grow</strong> — the gap between average () and healthy () is  per order. With bundle strategies, this is very achievable.</li>
-              <li><strong>Apparel AOV is deceptively high</strong> — the  average includes luxury and premium brands. Mass-market apparel often sits closer to -50. Bundle and cross-sell are the fastest way to climb toward the healthy  mark.</li>
+              <li><strong>Home & Furniture has the highest AOV</strong> — average $185, healthy at $260. But this category also has the lowest repeat purchase rate, so stores need to balance AOV with retention.</li>
+              <li><strong>Beauty and supplements have the most room to grow</strong> — the gap between average ($52) and healthy ($78) is $26 per order. With bundle strategies, this is very achievable.</li>
+              <li><strong>Apparel AOV is deceptively high</strong> — the $68 average includes luxury and premium brands. Mass-market apparel often sits closer to $40-50. Bundle and cross-sell are the fastest way to climb toward the healthy $95 mark.</li>
             </ol>
           </section>
 
@@ -414,14 +414,14 @@ export default function BlogPostPage() {
             <div className="rounded-2xl border border-black/8 bg-[#fafaf8] p-5 mt-4">
               <p className="text-sm font-semibold text-gray-950">Example</p>
               <div className="mt-3 space-y-1 text-sm text-gray-600">
-                <p>- Your beauty store AOV:  (vs. category healthy )</p>
+                <p>- Your beauty store AOV: $42 (vs. category healthy $78)</p>
                 <p>- Orders per month: 450</p>
               </div>
               <div className="mt-3 rounded-xl bg-gray-950 text-white p-3 font-mono text-sm">
-                Missed revenue = ( - ) × 450 = ,200/month
+                Missed revenue = ($78 - $42) × 450 = $16,200/month
               </div>
               <p className="mt-3 text-sm text-gray-700 leading-relaxed">
-                That's <strong>,400/year</strong> — from orders you're already getting, just without the extra revenue per order.
+                That's <strong>$194,400/year</strong> — from orders you're already getting, just without the extra revenue per order.
               </p>
             </div>
 
