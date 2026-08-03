@@ -81,11 +81,15 @@ export default function HomePage() {
           <nav className="hidden md:flex items-center gap-6 text-sm text-gray-600">
             <a href="#how" className="hover:text-gray-950 transition-colors">How It Works</a>
             <a href="#leaks" className="hover:text-gray-950 transition-colors">What It Finds</a>
+            <Link href="/case-studies" className="hover:text-gray-950 transition-colors">Case Studies</Link>
             <a href="#pricing" className="hover:text-gray-950 transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-gray-950 transition-colors">FAQ</a>
           </nav>
 
           <div className="flex items-center gap-2">
+            <Link href="/case-studies" className="hidden lg:inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-950 transition-colors">
+              Case Studies
+            </Link>
             <Link href="/demo" className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-950 transition-colors">
               See Example Report
             </Link>
@@ -132,6 +136,12 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white border border-black/10 text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors"
                 >
                   See Example Report
+                </Link>
+                <Link
+                  href="/case-studies"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white border border-black/10 text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors"
+                >
+                  View Case Studies
                 </Link>
               </div>
 
@@ -333,6 +343,16 @@ export default function HomePage() {
                   <p className="mt-3 text-sm text-gray-600 leading-relaxed">{item.detail}</p>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-6 flex justify-start">
+              <Link
+                href="/case-studies"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gray-950 text-white text-sm font-semibold hover:bg-gray-800 transition-colors"
+              >
+                Browse Case Studies
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </section>

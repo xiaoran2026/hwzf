@@ -12,6 +12,15 @@ const posts = [
     readTime: "11 min read",
     category: "Benchmarks",
   },
+  {
+    slug: "shopify-aov-benchmark",
+    title: "Shopify Average Order Value (AOV) Benchmark 2026: What's Normal By Category",
+    description:
+      "Shopify average order value (AOV) benchmark by category. See how your store's AOV compares to industry averages and find opportunities to increase it.",
+    date: "August 3, 2026",
+    readTime: "9 min read",
+    category: "Benchmarks",
+  },
 ];
 
 export default function BlogPage() {
@@ -57,7 +66,7 @@ export default function BlogPage() {
           {posts.map((post) => (
             <Link
               key={post.slug}
-              href={`/blog/${post.slug}`}
+              href={/blog/}
               className="block rounded-2xl border border-black/8 bg-white p-6 hover:border-black/20 transition-colors group"
             >
               <div className="flex items-center gap-3 text-xs">

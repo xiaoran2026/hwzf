@@ -1,0 +1,71 @@
+[33mcommit ef504ea5b9c9cdfaa964f618762bb018a2969b3a[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: 萧然搬砖师 <1457904649@qq.com>
+Date:   Tue Jul 21 11:37:35 2026 +0800
+
+    修复邮箱地址
+
+ .idea/vcs.xml                                      |   6 [32m+[m
+ frontend/.next/app-build-manifest.json             |  19 [32m+[m[31m-[m
+ .../cache/webpack/client-development/0.pack.gz     | Bin [31m366896[m -> [32m359204[m bytes
+ .../cache/webpack/client-development/10.pack.gz    | Bin [31m322722[m -> [32m1500[m bytes
+ .../cache/webpack/client-development/11.pack.gz    | Bin [31m316639[m -> [32m1823[m bytes
+ .../cache/webpack/client-development/16.pack.gz    | Bin [31m40851[m -> [32m182276[m bytes
+ .../cache/webpack/client-development/2.pack.gz     | Bin [31m277004[m -> [32m430389[m bytes
+ .../cache/webpack/client-development/21.pack.gz    | Bin [31m328219[m -> [32m272565[m bytes
+ .../cache/webpack/client-development/23.pack.gz    | Bin [31m1842650[m -> [32m1832551[m bytes
+ .../cache/webpack/client-development/27.pack.gz    | Bin [31m231272[m -> [32m321299[m bytes
+ .../cache/webpack/client-development/6.pack.gz     | Bin [31m42693[m -> [32m42337[m bytes
+ .../cache/webpack/client-development/index.pack.gz | Bin [31m367294[m -> [32m367261[m bytes
+ .../webpack/client-development/index.pack.gz.old   | Bin [31m367335[m -> [32m367266[m bytes
+ .../cache/webpack/server-development/1.pack.gz     | Bin [31m70474[m -> [32m330558[m bytes
+ .../cache/webpack/server-development/10.pack.gz    | Bin [31m9971[m -> [32m1526[m bytes
+ .../cache/webpack/server-development/12.pack.gz    | Bin [31m222550[m -> [32m13283[m bytes
+ .../cache/webpack/server-development/17.pack.gz    | Bin [31m289988[m -> [32m276811[m bytes
+ .../cache/webpack/server-development/18.pack.gz    | Bin [31m6449[m -> [32m865481[m bytes
+ .../cache/webpack/server-development/20.pack.gz    | Bin [31m7347270[m -> [32m7302485[m bytes
+ .../cache/webpack/server-development/22.pack.gz    | Bin [31m50194[m -> [32m31709[m bytes
+ .../cache/webpack/server-development/24.pack.gz    | Bin [31m458570[m -> [32m458569[m bytes
+ .../cache/webpack/server-development/25.pack.gz    | Bin [31m926118[m -> [32m925276[m bytes
+ .../cache/webpack/server-development/27.pack.gz    | Bin [31m865481[m -> [32m431154[m bytes
+ .../cache/webpack/server-development/28.pack.gz    | Bin [31m155282[m -> [32m149962[m bytes
+ .../cache/webpack/server-development/4.pack.gz     | Bin [31m41324[m -> [32m1743847[m bytes
+ .../cache/webpack/server-development/7.pack.gz     | Bin [31m4208[m -> [32m68538[m bytes
+ .../cache/webpack/server-development/9.pack.gz     | Bin [31m1811386[m -> [32m78259[m bytes
+ .../cache/webpack/server-development/index.pack.gz | Bin [31m496176[m -> [32m496260[m bytes
+ .../webpack/server-development/index.pack.gz.old   | Bin [31m496030[m -> [32m496213[m bytes
+ frontend/.next/prerender-manifest.json             |   6 [32m+[m[31m-[m
+ frontend/.next/server/app-paths-manifest.json      |   7 [32m+[m[31m-[m
+ frontend/.next/server/app/dashboard/page.js        | 544 [31m---------------[m
+ .../dashboard/page_client-reference-manifest.js    |   1 [31m-[m
+ frontend/.next/server/app/login/page.js            | 502 [31m--------------[m
+ .../app/login/page_client-reference-manifest.js    |   1 [31m-[m
+ .../server/app/page_client-reference-manifest.js   |   2 [32m+[m[31m-[m
+ frontend/.next/server/app/payment/redirect/page.js | 349 [31m----------[m
+ .../redirect/page_client-reference-manifest.js     |   1 [31m-[m
+ .../app/pricing/page_client-reference-manifest.js  |   2 [32m+[m[31m-[m
+ .../app/register/page_client-reference-manifest.js |   2 [32m+[m[31m-[m
+ frontend/.next/server/webpack-runtime.js           |   4 [32m+[m[31m-[m
+ .../.next/static/chunks/app/dashboard/layout.js    | 193 [31m------[m
+ frontend/.next/static/chunks/app/dashboard/page.js | 720 [31m--------------------[m
+ frontend/.next/static/chunks/app/layout.js         |   2 [32m+[m[31m-[m
+ frontend/.next/static/chunks/app/login/page.js     | 742 [31m---------------------[m
+ .../static/chunks/app/payment/redirect/page.js     | 149 [31m-----[m
+ frontend/.next/static/chunks/webpack.js            |   4 [32m+[m[31m-[m
+ .../72d5c12bc752a8df.webpack.hot-update.json       |   1 [31m-[m
+ .../84268d55f6c5bca5.webpack.hot-update.json       |   1 [31m-[m
+ .../977ee15e7a7b354b.webpack.hot-update.json       |   1 [31m-[m
+ .../app/layout.977ee15e7a7b354b.hot-update.js      |  22 [31m-[m
+ .../app/layout.b66b826827a090c0.hot-update.js      |  22 [31m-[m
+ .../b66b826827a090c0.webpack.hot-update.json       |   1 [31m-[m
+ .../d5d51e7f5ef935e1.webpack.hot-update.json       |   1 [31m-[m
+ .../webpack/webpack.72d5c12bc752a8df.hot-update.js |  12 [31m-[m
+ .../webpack/webpack.84268d55f6c5bca5.hot-update.js |  12 [31m-[m
+ .../webpack/webpack.977ee15e7a7b354b.hot-update.js |  12 [31m-[m
+ .../webpack/webpack.b66b826827a090c0.hot-update.js |  12 [31m-[m
+ .../webpack/webpack.d5d51e7f5ef935e1.hot-update.js |  12 [31m-[m
+ frontend/.next/trace                               |  15 [32m+[m[31m-[m
+ frontend/.next/types/app/dashboard/layout.ts       |  84 [31m---[m
+ frontend/.next/types/app/dashboard/page.ts         |  84 [31m---[m
+ frontend/.next/types/app/login/page.ts             |  84 [31m---[m
+ frontend/.next/types/app/payment/redirect/page.ts  |  84 [31m---[m
+ 64 files changed, 28 insertions(+), 3688 deletions(-)
