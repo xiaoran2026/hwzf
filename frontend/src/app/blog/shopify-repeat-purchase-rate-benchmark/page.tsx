@@ -239,7 +239,7 @@ export default function BlogPostPage() {
             <ul className="mt-3 space-y-2 text-sm text-gray-700 leading-relaxed">
               <li>The average Shopify repeat purchase rate across categories is <strong>24.7%</strong>, but healthy varies a lot by niche - from 18% (Apparel) to 38% (Pet Supplies).</li>
               <li>Most stores think they have a traffic problem. They actually have a <strong>repeat purchase leak</strong> - customers who buy once and never return within their expected buying cycle.</li>
-              <li>A 10-point gap to your category benchmark can mean <strong>,000-,000/month</strong> in missed revenue, depending on AOV and order volume.</li>
+              <li>A 10-point gap to your category benchmark can mean <strong>$3,000-$12,000/month</strong> in missed revenue, depending on AOV and order volume.</li>
               <li>Not sure where you stand? <Link href="/register" className="text-gray-900 underline font-semibold">Upload your Shopify order CSV</Link> and get a free repeat purchase audit in minutes - no API required.</li>
             </ul>
           </div>
@@ -403,13 +403,13 @@ export default function BlogPostPage() {
               <div className="mt-3 space-y-1 text-sm text-gray-600">
                 <p>- Your beauty store: RPR 22% (vs. category healthy 42%)</p>
                 <p>- New customers/month: 600</p>
-                <p>- Average repeat AOV: </p>
+                <p>- Average repeat AOV: $78</p>
               </div>
               <div className="mt-3 rounded-xl bg-gray-950 text-white p-3 font-mono text-sm">
-                Missed revenue = (0.42 - 0.22) × 600 ×  = ,360/month
+                Missed revenue = (0.42 - 0.22) × 600 × $78 = $9,360/month
               </div>
               <p className="mt-3 text-sm text-gray-700 leading-relaxed">
-                That's <strong>/year</strong> in repeat revenue you're not capturing - from customers who already bought from you once.
+                That's <strong>$112,320/year</strong> in repeat revenue you're not capturing - from customers who already bought from you once.
               </p>
             </div>
 
