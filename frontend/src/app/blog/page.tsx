@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 
@@ -66,7 +66,7 @@ export default function BlogPage() {
           {posts.map((post) => (
             <Link
               key={post.slug}
-              href={/blog/}
+              href={`/blog/${post.slug}`}
               className="block rounded-2xl border border-black/8 bg-white p-6 hover:border-black/20 transition-colors group"
             >
               <div className="flex items-center gap-3 text-xs">
